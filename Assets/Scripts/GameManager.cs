@@ -1,0 +1,118 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameManager : MonoBehaviour
+{
+    public int enemiesAlive;
+    public int round;
+
+    private GameObject[] spawnPoints;
+
+    public GameObject enemyPrefab;
+
+    [SerializeField] private TextMeshProUGUI roundText;
+    [SerializeField] private GameObject pauseMenu;
+    private GameObject _player;
+    private bool paused = false;
+
+    private MouseLook _mouseLook;
+    // Start is called before the first frame update
+    void Start()
+    {
+        InitLevel();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (enemiesAlive == 0)
+        {
+            NextWave(++round);
+            roundText.text = "Round: " + round;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (paused)
+            {
+                UnPause();
+            }
+            else
+            {
+                Pause();
+            }
+        }
+    }
+
+    private void NextWave(int round)
+    {
+        for (int i = 0; i < round; i++)
+        {
+            Debug.Log("e");
+            int spawnerRandom = Random.Range(0, 7);
+            GameObject enemy = Instantiate(enemyPrefab, spawnPoints[spawnerRandom].transform.position, Quaternion.identity);
+            enemy.GetComponent<EnemyManager>().gameManager = GetComponent<GameManager>();
+            enemiesAlive++;
+        }
+    }
+
+    private void Pause()
+    {
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+        _mouseLook.enabled = false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        paused = true;
+    }
+
+    public void UnPause()
+    {
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+        _mouseLook.enabled = true;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        paused = false;
+    }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("Game");
+    }
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+                if(EditorApplication.isPlaying) 
+                {
+                    UnityEditor.EditorApplication.isPlaying = false;
+                }
+        #else
+                Application.Quit();
+        #endif
+    }
+
+    public void InitLevel()
+    {
+        enemiesAlive = 0;
+        round = 0;
+        spawnPoints = GameObject.FindGameObjectsWithTag("Spawner");
+        _player = GameObject.FindWithTag("Player");
+        /*foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            Destroy(enemy);   
+        }*/
+        _mouseLook = _player.GetComponent<MouseLook>();
+        _player.GetComponent<PlayerManager>().RestartHP();
+        UnPause();
+    }
+}

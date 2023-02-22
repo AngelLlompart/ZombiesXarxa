@@ -15,6 +15,8 @@ public class EnemyManager : MonoBehaviour
     private float damage = 20;
 
     public float health = 100;
+
+    public GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +52,7 @@ public class EnemyManager : MonoBehaviour
         health -= dmg;
         if (health <= 0)
         {
+            gameManager.enemiesAlive--;
             Destroy(gameObject);
         }
         Debug.Log(health);

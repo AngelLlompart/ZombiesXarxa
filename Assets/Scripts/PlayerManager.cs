@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        healthText.text = "Health: " + health;
     }
 
     // Update is called once per frame
@@ -26,10 +26,15 @@ public class PlayerManager : MonoBehaviour
         health -= dmg;
         if (health <= 0)
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("GameOver");
         }
 
         healthText.text = "Health: " + health;
-        Debug.Log(health);
+    }
+
+    public void RestartHP()
+    {
+        health = 100;
+        healthText.text = "Health: " + health;
     }
 }
