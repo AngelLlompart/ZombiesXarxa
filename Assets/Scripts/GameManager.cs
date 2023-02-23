@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI roundText;
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private TextMeshProUGUI surviveRoundsText;
+    [SerializeField] private GameObject gameOverMenu;
+    private GameObject _weapon;
     private GameObject _player;
     private bool paused = false;
 
@@ -62,12 +65,9 @@ public class GameManager : MonoBehaviour
 
     private void Pause()
     {
-        Time.timeScale = 0;
-        pauseMenu.SetActive(true);
-        _mouseLook.enabled = false;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        StopTime();
         paused = true;
+        pauseMenu.SetActive(true);
     }
 
     public void UnPause()
@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         pauseMenu.SetActive(false);
         _mouseLook.enabled = true;
+        _weapon.GetComponent<WeaponManager>().enabled = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         paused = false;
@@ -101,12 +102,30 @@ public class GameManager : MonoBehaviour
         #endif
     }
 
+    public void GameOver()
+    {
+        StopTime();
+        surviveRoundsText.text = "Rounds Sruvived \n" + round;
+        gameOverMenu.SetActive(true);
+        
+    }
+
+    private void StopTime()
+    {
+        Time.timeScale = 0;
+        _mouseLook.enabled = false;
+        _weapon.GetComponent<WeaponManager>().enabled = false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
     public void InitLevel()
     {
         enemiesAlive = 0;
         round = 0;
         spawnPoints = GameObject.FindGameObjectsWithTag("Spawner");
         _player = GameObject.FindWithTag("Player");
+        _weapon = GameObject.Find("weapon");
+        gameOverMenu.SetActive(false);
         /*foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
             Destroy(enemy);   
