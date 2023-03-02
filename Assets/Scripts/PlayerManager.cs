@@ -13,11 +13,11 @@ public class PlayerManager : MonoBehaviour
     private Quaternion posInitCam;
 
     private GameManager _gameManager;
-    [SerializeField] private GameObject hitPanel;
+    [SerializeField] private CanvasGroup hitPanel;
 
-    private float shakeTime = 0.5f;
+    private float shakeTime = 1f;
 
-    private float shakeDuration = 1;
+    private float shakeDuration = 0.3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,17 +29,36 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(shakeTime < shakeDuration)
+        {
+            
+            hitPanel.alpha = 1;
+            
+            shakeTime += Time.deltaTime;
+            CameraShake();
+        }else {
+            camera.transform.localRotation = posInitCam;
+            if (hitPanel.alpha > 0)
+            {
+                hitPanel.alpha -= Time.deltaTime;
+            }
+
+        }
+
     }
 
     public void Hit(float dmg)
     {
-        StartCoroutine(CameraMove());
         health -= dmg;
         if (health <= 0)
         {
             _gameManager.GameOver();
         }
+        else
+        {
+            shakeTime = 0;
+        }
+        
 
         healthText.text = "Health: " + health;
     }
@@ -50,12 +69,9 @@ public class PlayerManager : MonoBehaviour
         healthText.text = "Health: " + health;
     }
     
-    IEnumerator CameraMove()
+    private void CameraShake()
     {
-        hitPanel.SetActive(true);
-        camera.transform.localRotation = Quaternion.Euler(Random.Range(-4f, 4f), 0, 0);
-        yield return new WaitForSecondsRealtime(0.4f);
-        hitPanel.SetActive(false);
-        camera.transform.localRotation = posInitCam;
+        camera.transform.localRotation = Quaternion.Euler(Random.Range(-2f, 2f), 0, 0);
+        
     }
 }

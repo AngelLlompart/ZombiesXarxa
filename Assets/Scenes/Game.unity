@@ -426,6 +426,7 @@ MonoBehaviour:
   playerCam: {fileID: 38854502}
   fps: {fileID: 1307695675}
   range: 5
+  playerAnimator: {fileID: 1771918790}
 --- !u!1 &217002918 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 973059066356943693, guid: 14822e59db03ba34aa9b6cbd18e4f8a7,
@@ -705,13 +706,14 @@ GameObject:
   - component: {fileID: 400914131}
   - component: {fileID: 400914133}
   - component: {fileID: 400914132}
+  - component: {fileID: 400914134}
   m_Layer: 5
   m_Name: hitPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &400914131
 RectTransform:
   m_ObjectHideFlags: 0
@@ -770,6 +772,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 400914130}
   m_CullTransparentMesh: 1
+--- !u!225 &400914134
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 400914130}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &410790922
 GameObject:
   m_ObjectHideFlags: 0
@@ -4233,6 +4247,12 @@ MeshCollider:
 --- !u!1 &1771918788 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8220592146183641077, guid: 0925ef4c6db7eea41b66df831732eb3a,
+    type: 3}
+  m_PrefabInstance: {fileID: 7249718138247591014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1771918790 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2363071567449280661, guid: 0925ef4c6db7eea41b66df831732eb3a,
     type: 3}
   m_PrefabInstance: {fileID: 7249718138247591014}
   m_PrefabAsset: {fileID: 0}
@@ -12502,7 +12522,7 @@ MonoBehaviour:
   health: 100
   healthText: {fileID: 1751909584}
   camera: {fileID: 38854502}
-  hitPanel: {fileID: 400914130}
+  hitPanel: {fileID: 400914134}
 --- !u!1001 &7249718138247591014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12510,6 +12530,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2363071567449280661, guid: 0925ef4c6db7eea41b66df831732eb3a,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 157aafccb07eba84fb43f3a00d01ac63, type: 2}
     - target: {fileID: 5739880647575891750, guid: 0925ef4c6db7eea41b66df831732eb3a,
         type: 3}
       propertyPath: m_LocalPosition.x

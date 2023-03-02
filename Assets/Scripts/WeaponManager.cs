@@ -9,6 +9,8 @@ public class WeaponManager : MonoBehaviour
     public float range;
     private float dmg = 25;
     private Vector3 posInitCam;
+
+    [SerializeField] private Animator playerAnimator;
     void Start()
     {
         //posInitCam = playerCam.transform.localPosition;
@@ -23,12 +25,17 @@ public class WeaponManager : MonoBehaviour
         {
             Shoot();
         }
+
+        if (playerAnimator.GetBool("isShooting"))
+        {
+            //playerAnimator.SetBool("isShooting", false);
+            StartCoroutine(DelayAnimation());
+        }
     }
 
     private void Shoot()
     {
-
-        StartCoroutine(FpsMove());
+        playerAnimator.SetBool("isShooting", true);
         RaycastHit hit;
         if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
         {
@@ -41,6 +48,11 @@ public class WeaponManager : MonoBehaviour
 
     }
 
+    IEnumerator DelayAnimation()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        playerAnimator.SetBool("isShooting", false);
+    }
     IEnumerator FpsMove()
     {
         float x = Random.Range(0, 0.05f);
