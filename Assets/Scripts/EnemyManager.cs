@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -17,9 +18,20 @@ public class EnemyManager : MonoBehaviour
     public float health = 100;
 
     public GameManager gameManager;
+
+    [SerializeField] private Slider healthBar;
+    
+    // Animacio i millora del xoc
+    public bool playerInReach;
+    public float attackDelayTimer;
+    public float howMuchEarlierStartAttackAnimation;
+    public float delayBetweenAttacks;
+
     // Start is called before the first frame update
     void Start()
     {
+        healthBar.maxValue = health;
+        healthBar.value = health;
         _player = GameObject.FindGameObjectWithTag("Player");
         _navMesh = GetComponent<NavMeshAgent>();
     }
@@ -43,9 +55,37 @@ public class EnemyManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _player.GetComponent<PlayerManager>().Hit(damage);
+            //_player.GetComponent<PlayerManager>().Hit(damage);
+            playerInReach = true;
         }
     }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (playerInReach)
+        {
+            attackDelayTimer += Time.deltaTime;
+            if(attackDelayTimer >= delayBetweenAttacks - howMuchEarlierStartAttackAnimation && attackDelayTimer <= delayBetweenAttacks)
+            {
+                enemyAnimator.SetTrigger("isAttacking");
+            }
+            if(attackDelayTimer >= delayBetweenAttacks)
+            {
+                _player.GetComponent<PlayerManager>().Hit(damage);
+                attackDelayTimer = 0;
+            }
+        }
+    }
+    
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            playerInReach = false;
+            attackDelayTimer = 0;
+        }
+    }
+
 
     public void Hit(float dmg)
     {
@@ -53,8 +93,15 @@ public class EnemyManager : MonoBehaviour
         if (health <= 0)
         {
             gameManager.enemiesAlive--;
-            Destroy(gameObject);
+            enemyAnimator.SetTrigger("isDead");
+            Destroy(gameObject, 10f);
+            Destroy(GetComponent<NavMeshAgent>());
+            Destroy(GetComponent<EnemyManager>());
+            Destroy(GetComponent<CapsuleCollider>());
+
         }
+
+        healthBar.value = health;
         Debug.Log(health);
     }
 }

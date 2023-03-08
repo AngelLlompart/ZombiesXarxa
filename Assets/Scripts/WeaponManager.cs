@@ -11,31 +11,34 @@ public class WeaponManager : MonoBehaviour
     private Vector3 posInitCam;
 
     [SerializeField] private Animator playerAnimator;
+    private AudioSource _audio;
     void Start()
     {
         //posInitCam = playerCam.transform.localPosition;
         posInitCam = fps.transform.localPosition;
+        _audio = GetComponent<AudioSource>();
         Debug.Log(posInitCam);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            Shoot();
-        }
-
         if (playerAnimator.GetBool("isShooting"))
         {
             //playerAnimator.SetBool("isShooting", false);
             StartCoroutine(DelayAnimation());
+        }
+        
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Shoot();
         }
     }
 
     private void Shoot()
     {
         playerAnimator.SetBool("isShooting", true);
+        _audio.Play();
         RaycastHit hit;
         if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
         {

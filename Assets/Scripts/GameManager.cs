@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     private GameObject _weapon;
     private GameObject _player;
     private bool paused = false;
-
+    private bool gameOver = false;
     private MouseLook _mouseLook;
     // Start is called before the first frame update
     void Start()
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
             roundText.text = "Round: " + round;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !gameOver)
         {
             if (paused)
             {
@@ -105,6 +105,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         StopTime();
+        gameOver = true;
         surviveRoundsText.text = "Rounds Sruvived \n" + round;
         gameOverMenu.SetActive(true);
         
@@ -117,11 +118,13 @@ public class GameManager : MonoBehaviour
         _weapon.GetComponent<WeaponManager>().enabled = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        Debug.Log("E");
     }
     public void InitLevel()
     {
         enemiesAlive = 0;
         round = 0;
+        gameOver = false;
         spawnPoints = GameObject.FindGameObjectsWithTag("Spawner");
         _player = GameObject.FindWithTag("Player");
         _weapon = GameObject.Find("weapon");
