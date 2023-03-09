@@ -12,6 +12,7 @@ public class WeaponManager : MonoBehaviour
 
     [SerializeField] private Animator playerAnimator;
     private AudioSource _audio;
+    [SerializeField] private GameObject bloodParticleSystem;
     void Start()
     {
         //posInitCam = playerCam.transform.localPosition;
@@ -40,12 +41,17 @@ public class WeaponManager : MonoBehaviour
         playerAnimator.SetBool("isShooting", true);
         _audio.Play();
         RaycastHit hit;
+        transform.Find("shootParticle").GetComponent<ParticleSystem>().Play();
         if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
         {
             EnemyManager enemyManager = hit.transform.GetComponent<EnemyManager>();
             if(enemyManager != null)
             {
                 enemyManager.Hit(dmg);
+                GameObject particleInstance =
+                    Instantiate(bloodParticleSystem, hit.point, Quaternion.LookRotation(hit.normal));
+                particleInstance.transform.parent = hit.transform;
+                particleInstance.GetComponent<ParticleSystem>().Play();
             }
         }
 

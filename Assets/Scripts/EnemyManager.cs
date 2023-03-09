@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class EnemyManager : MonoBehaviour
     public float attackDelayTimer;
     public float howMuchEarlierStartAttackAnimation;
     public float delayBetweenAttacks;
+    private AudioSource _audioSource;
+    [SerializeField] private AudioClip[] audioClips; 
 
     // Start is called before the first frame update
     void Start()
@@ -34,11 +37,18 @@ public class EnemyManager : MonoBehaviour
         healthBar.value = health;
         _player = GameObject.FindGameObjectWithTag("Player");
         _navMesh = GetComponent<NavMeshAgent>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!_audioSource.isPlaying)
+        {
+            _audioSource.clip = audioClips[Random.Range(0, 3)];
+            _audioSource.PlayDelayed(1);
+        }
+        
         _navMesh.destination = _player.transform.position;
 
         if (_navMesh.velocity.magnitude > 1)
