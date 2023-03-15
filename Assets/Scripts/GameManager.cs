@@ -18,11 +18,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private TextMeshProUGUI surviveRoundsText;
     [SerializeField] private GameObject gameOverMenu;
+    [SerializeField] private Animator fadeAnimator;
     private GameObject _weapon;
     private GameObject _player;
     private bool paused = false;
     private bool gameOver = false;
     private MouseLook _mouseLook;
+
+    private bool fadeOut = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +58,6 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < round; i++)
         {
-            Debug.Log("e");
             int spawnerRandom = Random.Range(0, 7);
             GameObject enemy = Instantiate(enemyPrefab, spawnPoints[spawnerRandom].transform.position, Quaternion.identity);
             enemy.GetComponent<EnemyManager>().gameManager = GetComponent<GameManager>();
@@ -83,7 +85,10 @@ public class GameManager : MonoBehaviour
 
     public void Menu()
     {
-        SceneManager.LoadScene("MainMenu");
+        fadeOut = true;
+        //UnPause();
+        fadeAnimator.SetTrigger("fadein");
+        StartCoroutine(DelayMenu());
     }
 
     public void Restart()
@@ -118,7 +123,6 @@ public class GameManager : MonoBehaviour
         _weapon.GetComponent<WeaponManager>().enabled = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        Debug.Log("E");
     }
     public void InitLevel()
     {
@@ -136,5 +140,11 @@ public class GameManager : MonoBehaviour
         _mouseLook = _player.GetComponent<MouseLook>();
         _player.GetComponent<PlayerManager>().RestartHP();
         UnPause();
+    }
+
+    IEnumerator DelayMenu()
+    {
+        yield return new WaitForSecondsRealtime(1);
+        SceneManager.LoadScene("MainMenu");
     }
 }

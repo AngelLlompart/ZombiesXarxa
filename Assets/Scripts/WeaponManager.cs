@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class WeaponManager : MonoBehaviour
@@ -13,12 +14,20 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private Animator playerAnimator;
     private AudioSource _audio;
     [SerializeField] private GameObject bloodParticleSystem;
+    [SerializeField] private GameObject rockParticleSystem;
+    [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] private TextMeshProUGUI reloadText;
+    
+    private int maxAmmo = 30;
+    public int ammo;
     void Start()
     {
         //posInitCam = playerCam.transform.localPosition;
         posInitCam = fps.transform.localPosition;
         _audio = GetComponent<AudioSource>();
-        Debug.Log(posInitCam);
+        ammo = maxAmmo;
+        ammoText.text = "Ammo: "+ ammo;
+        reloadText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -32,7 +41,25 @@ public class WeaponManager : MonoBehaviour
         
         if (Input.GetButtonDown("Fire1"))
         {
-            Shoot();
+            if (ammo > 0)
+            {
+                Shoot();
+            }
+        }
+
+        if (ammo == 0)
+        {
+            reloadText.gameObject.SetActive(true);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            if (ammo < maxAmmo)
+            {
+                ammo = maxAmmo;
+                reloadText.gameObject.SetActive(false);
+                ammoText.text = "Ammo: " + ammo;
+            }
         }
     }
 
@@ -53,7 +80,17 @@ public class WeaponManager : MonoBehaviour
                 particleInstance.transform.parent = hit.transform;
                 particleInstance.GetComponent<ParticleSystem>().Play();
             }
+            else
+            {
+                GameObject particleInstance =
+                    Instantiate(rockParticleSystem, hit.point, Quaternion.LookRotation(hit.normal));
+                particleInstance.transform.parent = hit.transform;
+                particleInstance.GetComponent<ParticleSystem>().Play();
+            }
         }
+
+        ammo--;
+        ammoText.text = "Ammo: " + ammo;
 
     }
 

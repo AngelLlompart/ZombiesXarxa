@@ -43,7 +43,7 @@ public class EnemyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_audioSource.isPlaying)
+        if (!_audioSource.isPlaying && Time.timeScale != 0)
         {
             _audioSource.clip = audioClips[Random.Range(0, 3)];
             _audioSource.PlayDelayed(1);
