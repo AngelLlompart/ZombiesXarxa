@@ -24,6 +24,11 @@ public class MainMenuManager : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
+    public void Multiplayer()
+    {
+        SceneManager.LoadScene("MultiplayerScene");
+    }
+        
     public void Quit()
     {
         #if UNITY_EDITOR

@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement2 : MonoBehaviour
 {
     [SerializeField] private CharacterController _controller;
 
-    public float speed = 10;
+    public float speed;
+    private float walkSpeed = 5;
+    private float runSpeed = 10;
     public float gravity = -9.81f;
 
     private Vector3 fallVelocity;
@@ -44,6 +47,15 @@ public class PlayerMovement2 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Jump();
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = runSpeed;
+        }
+        else
+        {
+            speed = walkSpeed;
         }
     }
 

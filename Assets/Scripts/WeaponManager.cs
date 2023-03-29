@@ -38,16 +38,18 @@ public class WeaponManager : MonoBehaviour
             //playerAnimator.SetBool("isShooting", false);
             StartCoroutine(DelayAnimation());
         }
-        
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (ammo > 0)
+
+        if (!GameManager.sharedInstance.paused && !GameManager.sharedInstance.gameOver){
+            if (Input.GetButtonDown("Fire1"))
             {
-                Shoot();
+                if (ammo > 0)
+                {
+                    Shoot();
+                }
             }
         }
 
-        if (ammo == 0)
+    if (ammo == 0)
         {
             reloadText.gameObject.SetActive(true);
         }

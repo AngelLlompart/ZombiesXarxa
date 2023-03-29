@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,13 +21,29 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI surviveRoundsText;
     [SerializeField] private GameObject gameOverMenu;
     [SerializeField] private Animator fadeAnimator;
-    private GameObject _weapon;
+    //private GameObject _weapon;
     private GameObject _player;
-    private bool paused = false;
-    private bool gameOver = false;
+    public bool paused = false;
+    public bool gameOver = false;
     private MouseLook _mouseLook;
 
     private bool fadeOut = false;
+
+
+    public static GameManager sharedInstance;
+
+    private void Awake()
+    {
+        if (sharedInstance == null)
+        {
+            sharedInstance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,7 +95,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         pauseMenu.SetActive(false);
         _mouseLook.enabled = true;
-        _weapon.GetComponent<WeaponManager>().enabled = true;
+        //_weapon.GetComponent<WeaponManager>().enabled = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         paused = false;
@@ -120,7 +138,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         _mouseLook.enabled = false;
-        _weapon.GetComponent<WeaponManager>().enabled = false;
+        //_weapon.GetComponent<WeaponManager>().enabled = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
@@ -131,7 +149,7 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         spawnPoints = GameObject.FindGameObjectsWithTag("Spawner");
         _player = GameObject.FindWithTag("Player");
-        _weapon = GameObject.Find("weapon");
+        //_weapon = GameObject.Find("weapon");
         gameOverMenu.SetActive(false);
         /*foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
