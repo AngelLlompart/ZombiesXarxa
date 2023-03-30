@@ -6410,9 +6410,9 @@ Canvas:
   m_GameObject: {fileID: 409341071875944634}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 409341072425184987}
+  m_PlaneDistance: 0.15
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -7748,6 +7748,7 @@ MonoBehaviour:
   fadeAnimator: {fileID: 409341071703454426}
   paused: 0
   gameOver: 0
+  photonView: {fileID: 5011960438601912406}
 --- !u!1 &409341072616851826
 GameObject:
   m_ObjectHideFlags: 0
@@ -8609,6 +8610,7 @@ GameObject:
   - component: {fileID: 811984060587700129}
   - component: {fileID: 811984060587700128}
   - component: {fileID: 5011960438601912406}
+  - component: {fileID: 2202914108967648365}
   m_Layer: 0
   m_Name: First_Person_Player
   m_TagString: Player
@@ -8696,6 +8698,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivity: 0.5
   camHolder: {fileID: 1380072592339716332}
+  photonView: {fileID: 5011960438601912406}
 --- !u!114 &811984060587700134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8838,6 +8841,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   jumpHeight: 2
+  photonView: {fileID: 5011960438601912406}
 --- !u!114 &811984060587700128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8854,6 +8858,7 @@ MonoBehaviour:
   healthText: {fileID: 409341072688623535}
   camera: {fileID: 409341072425184989}
   hitPanel: {fileID: 409341071153978793}
+  photonView: {fileID: 5011960438601912406}
 --- !u!114 &5011960438601912406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8872,10 +8877,29 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 2202914108967648365}
+  - {fileID: 6900780852094721303}
+  - {fileID: 3052147865351151077}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2202914108967648365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806658996143840875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1 &847475711627229897
 GameObject:
   m_ObjectHideFlags: 0
@@ -8918,6 +8942,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4076532316138684231}
   - component: {fileID: 4753893173299695500}
+  - component: {fileID: 6900780852094721303}
+  - component: {fileID: 3052147865351151077}
   m_Layer: 0
   m_Name: FPS_Character
   m_TagString: Untagged
@@ -8963,6 +8989,43 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &6900780852094721303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380072592339716332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &3052147865351151077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380072592339716332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 2
+    Name: isShooting
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
 --- !u!1 &1473710417686277108
 GameObject:
   m_ObjectHideFlags: 0
@@ -10040,3 +10103,5 @@ MonoBehaviour:
   ammoText: {fileID: 409341072263645064}
   reloadText: {fileID: 409341072853095860}
   ammo: 30
+  photonView: {fileID: 5011960438601912406}
+  gameManager: {fileID: 409341072518628290}

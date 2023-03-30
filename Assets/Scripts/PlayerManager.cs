@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,6 +19,8 @@ public class PlayerManager : MonoBehaviour
     private float shakeTime = 1f;
 
     private float shakeDuration = 0.3f;
+
+    public PhotonView photonView;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +32,13 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            camera.SetActive(false);
+            return;
+        }
+        
         if(shakeTime < shakeDuration)
         {
             

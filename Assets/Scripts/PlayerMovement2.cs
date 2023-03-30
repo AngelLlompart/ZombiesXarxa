@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using Photon.Pun;
 public class PlayerMovement2 : MonoBehaviour
 {
     [SerializeField] private CharacterController _controller;
@@ -19,6 +19,8 @@ public class PlayerMovement2 : MonoBehaviour
     public float groundDistance = 0.4f; //Umbral de distància enterra
     public LayerMask groundMask;
     public float jumpHeight = 2f;
+
+    public PhotonView photonView;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,10 @@ public class PlayerMovement2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            return;
+        }
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(x, 0, z);

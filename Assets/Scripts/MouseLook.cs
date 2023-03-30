@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -12,6 +13,8 @@ public class MouseLook : MonoBehaviour
     //private Vector3 _angles = Vector3.zero;
     private float _maxVertivalAngle = 90;
     public GameObject camHolder;
+
+    public PhotonView photonView;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +40,12 @@ public class MouseLook : MonoBehaviour
     
     void Look()
     {
+        
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            return;
+        }
+        
         //Turn
         transform.Rotate(Vector3.up * look.x * sensitivity);
         

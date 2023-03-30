@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -20,6 +21,9 @@ public class WeaponManager : MonoBehaviour
     
     private int maxAmmo = 30;
     public int ammo;
+    public PhotonView photonView;
+
+    public GameManager gameManager;
     void Start()
     {
         //posInitCam = playerCam.transform.localPosition;
@@ -33,13 +37,18 @@ public class WeaponManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        if (PhotonNetwork.InRoom && !photonView.IsMine)
+        {
+            return;
+        }
         if (playerAnimator.GetBool("isShooting"))
         {
             //playerAnimator.SetBool("isShooting", false);
             StartCoroutine(DelayAnimation());
         }
 
-        if (!GameManager.sharedInstance.paused && !GameManager.sharedInstance.gameOver){
+        if (!gameManager.paused && !gameManager.gameOver){
             if (Input.GetButtonDown("Fire1"))
             {
                 if (ammo > 0)
