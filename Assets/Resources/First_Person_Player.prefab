@@ -8859,6 +8859,7 @@ MonoBehaviour:
   camera: {fileID: 409341072425184989}
   hitPanel: {fileID: 409341071153978793}
   photonView: {fileID: 5011960438601912406}
+  activeWeapon: {fileID: 9101510239590392678}
 --- !u!114 &5011960438601912406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10040,7 +10041,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

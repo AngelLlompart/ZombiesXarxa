@@ -76,10 +76,16 @@ public class WeaponManager : MonoBehaviour
 
     private void Shoot()
     {
+        if (PhotonNetwork.InRoom)
+        {
+            photonView.RPC("WeaponShootVFX", RpcTarget.All, photonView.ViewID);
+        }
+        else
+        {
+            ShootVFX(photonView.ViewID);
+        }
         playerAnimator.SetBool("isShooting", true);
-        _audio.Play();
         RaycastHit hit;
-        transform.Find("shootParticle").GetComponent<ParticleSystem>().Play();
         if (Physics.Raycast(playerCam.transform.position, transform.forward, out hit, range))
         {
             EnemyManager enemyManager = hit.transform.GetComponent<EnemyManager>();
@@ -103,6 +109,15 @@ public class WeaponManager : MonoBehaviour
         ammo--;
         ammoText.text = "Ammo: " + ammo;
 
+    }
+
+    public void ShootVFX(int viewID)
+    {
+        if (photonView.ViewID == viewID)
+        {
+            _audio.Play();
+            transform.Find("shootParticle").GetComponent<ParticleSystem>().Play(); 
+        }
     }
 
     IEnumerator DelayAnimation()

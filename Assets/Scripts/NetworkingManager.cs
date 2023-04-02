@@ -68,4 +68,9 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
         Debug.Log("Carregar escena del joc mp");
         PhotonNetwork.LoadLevel("GameOnline");
     }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }

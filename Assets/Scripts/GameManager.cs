@@ -86,12 +86,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             GameObject enemy;
             if (PhotonNetwork.InRoom)
             {
-                enemy = PhotonNetwork.Instantiate("Zombie", spawnPoints[spawnerRandom].transform.position,
+                enemy = PhotonNetwork.Instantiate("Zombie 1", spawnPoints[spawnerRandom].transform.position,
                     Quaternion.identity);
             }
             else
             {
-                enemy = Instantiate(Resources.Load("Zombie"), spawnPoints[spawnerRandom].transform.position, Quaternion.identity) as GameObject;
+                enemy = Instantiate(Resources.Load("Zombie 1"), spawnPoints[spawnerRandom].transform.position, Quaternion.identity) as GameObject;
             }
             enemy.GetComponent<EnemyManager>().gameManager = GetComponent<GameManager>();
            
@@ -108,7 +108,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void UnPause()
     {
-        Time.timeScale = 1;
+        if (!PhotonNetwork.InRoom)
+        {
+            Time.timeScale = 1;
+        }
         pauseMenu.SetActive(false);
         _mouseLook.enabled = true;
         //_weapon.GetComponent<WeaponManager>().enabled = true;
@@ -127,7 +130,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void Restart()
     {
-        SceneManager.LoadScene("Game");
+        if (PhotonNetwork.InRoom)
+        {
+            SceneManager.LoadScene("GameOnline");  
+        }
+        else
+        {
+            SceneManager.LoadScene("Game");  
+        }
+       
     }
     public void Quit()
     {
@@ -151,8 +162,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     private void StopTime()
-    {
-        Time.timeScale = 0;
+    { if (!PhotonNetwork.InRoom)
+        {
+            Time.timeScale = 0;
+        }
         _mouseLook.enabled = false;
         //_weapon.GetComponent<WeaponManager>().enabled = false;
         Cursor.visible = true;
@@ -179,7 +192,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     IEnumerator DelayMenu()
     {
         yield return new WaitForSecondsRealtime(1);
-        SceneManager.LoadScene("MainMenu");
+        if (PhotonNetwork.InRoom)
+        {
+            SceneManager.LoadScene("MultiplayerScene");
+        }
+        else
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)

@@ -21,6 +21,8 @@ public class PlayerManager : MonoBehaviour
     private float shakeDuration = 0.3f;
 
     public PhotonView photonView;
+
+    public GameObject activeWeapon;
     // Start is called before the first frame update
     void Start()
     {
@@ -59,18 +61,35 @@ public class PlayerManager : MonoBehaviour
 
     public void Hit(float dmg)
     {
-        health -= dmg;
-        if (health <= 0)
+        if (PhotonNetwork.InRoom)
         {
-            _gameManager.GameOver();
+            photonView.RPC("PlayerTakeDamage", RpcTarget.All, dmg, photonView.ViewID);
         }
         else
         {
-            shakeTime = 0;
+            PlayerTakeDamage(dmg, photonView.ViewID);
         }
+      
+    }
+
+    [PunRPC]
+    public void PlayerTakeDamage(float dmg, int viewID)
+    {
+        if (photonView.ViewID == viewID)
+        {
+            health -= dmg;
+            if (health <= 0)
+            {
+                _gameManager.GameOver();
+            }
+            else
+            {
+                shakeTime = 0;
+            }
         
 
-        healthText.text = "Health: " + health;
+            healthText.text = "Health: " + health;
+        }
     }
 
     public void RestartHP()
@@ -83,5 +102,11 @@ public class PlayerManager : MonoBehaviour
     {
         camera.transform.localRotation = Quaternion.Euler(Random.Range(-2f, 2f), 0, 0);
         
+    }
+
+    [PunRPC]
+    public void WeaponShootVFX(int viewID)
+    {
+        activeWeapon.GetComponent<WeaponManager>().ShootVFX(viewID);
     }
 }

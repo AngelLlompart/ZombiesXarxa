@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] private Animator enemyAnimator;
 
-    private float damage = 20;
+    private float damageDone = 20;
 
     public float health = 100;
 
@@ -28,14 +29,16 @@ public class EnemyManager : MonoBehaviour
     public float howMuchEarlierStartAttackAnimation;
     public float delayBetweenAttacks;
     private AudioSource _audioSource;
-    [SerializeField] private AudioClip[] audioClips; 
+    [SerializeField] private AudioClip[] audioClips;
+    public PhotonView _photonView;
 
+    private GameObject[] _playersInScene;
     // Start is called before the first frame update
     void Start()
     {
         healthBar.maxValue = health;
         healthBar.value = health;
-        _player = GameObject.FindGameObjectWithTag("Player");
+        _playersInScene = GameObject.FindGameObjectsWithTag("Player");
         _navMesh = GetComponent<NavMeshAgent>();
         _audioSource = GetComponent<AudioSource>();
     }
@@ -48,9 +51,19 @@ public class EnemyManager : MonoBehaviour
             _audioSource.clip = audioClips[Random.Range(0, 3)];
             _audioSource.PlayDelayed(1);
         }
-        
-        _navMesh.destination = _player.transform.position;
 
+        if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+        
+        GetClosestPlayer();
+        if (_player != null)
+        {
+            _navMesh.destination = _player.transform.position;
+            healthBar.transform.LookAt(_player.transform);
+        }
+        
         if (_navMesh.velocity.magnitude > 1)
         {
             enemyAnimator.SetBool("isRunning", true);
@@ -81,7 +94,7 @@ public class EnemyManager : MonoBehaviour
             }
             if(attackDelayTimer >= delayBetweenAttacks)
             {
-                _player.GetComponent<PlayerManager>().Hit(damage);
+                _player.GetComponent<PlayerManager>().Hit(damageDone);
                 attackDelayTimer = 0;
             }
         }
@@ -99,19 +112,56 @@ public class EnemyManager : MonoBehaviour
 
     public void Hit(float dmg)
     {
-        health -= dmg;
-        if (health <= 0)
+        if (PhotonNetwork.InRoom)
         {
-            gameManager.enemiesAlive--;
-            enemyAnimator.SetTrigger("isDead");
-            Destroy(gameObject, 10f);
-            Destroy(GetComponent<NavMeshAgent>());
-            Destroy(GetComponent<EnemyManager>());
-            Destroy(GetComponent<CapsuleCollider>());
-
+            _photonView.RPC("TakeDamage", RpcTarget.All, dmg, _photonView.ViewID);
         }
+        else
+        {
+            TakeDamage(dmg, _photonView.ViewID);
+        }
+    }
 
-        healthBar.value = health;
-        Debug.Log(health);
+    [PunRPC]
+    public void TakeDamage(float dmg, int viewID)
+    {
+        if (_photonView.ViewID == viewID)
+        {
+            health -= dmg;
+            healthBar.value = health;
+            if (health <= 0)
+            {
+                enemyAnimator.SetTrigger("isDead");
+                Destroy(gameObject, 10f);
+                Destroy(GetComponent<NavMeshAgent>());
+                Destroy(GetComponent<EnemyManager>());
+                Destroy(GetComponent<CapsuleCollider>());
+
+
+                if (!PhotonNetwork.InRoom || (PhotonNetwork.IsMasterClient && _photonView.IsMine))
+                {
+                    gameManager.enemiesAlive--;
+                }
+            } 
+        }
+    }
+
+    private void GetClosestPlayer()
+    {
+        float minDistance = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
+
+        foreach (GameObject p in _playersInScene)
+        {
+            if (p != null)
+            {
+                float distance = Vector3.Distance(p.transform.position, currentPosition);
+                if (distance < minDistance)
+                {
+                    _player = p;
+                    minDistance = distance;
+                }
+            }
+        }
     }
 }
