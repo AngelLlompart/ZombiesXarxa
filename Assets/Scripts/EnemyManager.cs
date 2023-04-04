@@ -32,6 +32,9 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private AudioClip[] audioClips;
     public PhotonView _photonView;
 
+    
+    State currentState;
+
     private GameObject[] _playersInScene;
     // Start is called before the first frame update
     void Start()
@@ -41,6 +44,7 @@ public class EnemyManager : MonoBehaviour
         _playersInScene = GameObject.FindGameObjectsWithTag("Player");
         _navMesh = GetComponent<NavMeshAgent>();
         _audioSource = GetComponent<AudioSource>();
+        currentState = new State.Attack(this.gameObject, _navMesh, _playersInScene); // Create our first state.
     }
 
     // Update is called once per frame
@@ -58,9 +62,10 @@ public class EnemyManager : MonoBehaviour
         }
         
         GetClosestPlayer();
+        currentState = currentState.Process();
         if (_player != null)
         {
-            _navMesh.destination = _player.transform.position;
+            //_navMesh.destination = _player.transform.position;
             healthBar.transform.LookAt(_player.transform);
         }
         
