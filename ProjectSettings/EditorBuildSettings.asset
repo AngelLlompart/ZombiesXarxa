@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameOnline.unity
     guid: 64459f8ac079a3f42a3fd2504b24680e
-  - enabled: 1
-    path: Assets/Scenes/Room.unity
-    guid: 9c6c4ecd5aa92164b8662684b0e3c461
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}
