@@ -47,6 +47,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.NickName = username.text;
         multiplayerButtonText.text = "Connecting...";
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
     }
     
@@ -70,7 +71,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     
     IEnumerator DisconnectPlayer()
     {
-        PhotonNetwork.LeaveRoom();
+        //PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
         while (PhotonNetwork.IsConnected)
         {

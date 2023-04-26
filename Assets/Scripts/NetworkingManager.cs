@@ -23,9 +23,11 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public float timeBetweenUpdates = 1.5f;
     private float nextUpdateTime;
 
-    public List<PlayerItem> playerItemsList = new List<PlayerItem>();
     public PlayerItem playerItemPrefab;
+    private List<PlayerItem> playerItemsList = new List<PlayerItem>();
     public Transform playerItemParent;
+
+    public GameObject playButton;
     void Start()
     {
         PhotonNetwork.JoinLobby();
@@ -44,6 +46,15 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
         else
         {
             createRoom.interactable = false;
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            playButton.SetActive(true);
+        }
+        else
+        {
+            playButton.SetActive(false);
         }
     }
     
@@ -71,7 +82,7 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
 
     public void Menu()
     {
-        PhotonNetwork.Disconnect();
+        //PhotonNetwork.Disconnect();
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -116,6 +127,11 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
         foreach (KeyValuePair<int, Player> player in PhotonNetwork.CurrentRoom.Players)
         {
             PlayerItem newPlayerItem = Instantiate(playerItemPrefab, playerItemParent);
+            newPlayerItem.SetPlayerInfo(player.Value);
+            if (player.Value == PhotonNetwork.LocalPlayer)
+            {
+                newPlayerItem.ApplyLocalChanges();
+            }
             playerItemsList.Add(newPlayerItem);
             
         }
@@ -150,5 +166,10 @@ public class NetworkingManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         UpdatePlayerList();
+    }
+
+    public void OnClickPlayButton()
+    {
+        PhotonNetwork.LoadLevel("GameOnline");
     }
 }
