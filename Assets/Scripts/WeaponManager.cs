@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 
-public class WeaponManager : MonoBehaviour
+public class WeaponManager : MonoBehaviour, IOnEventCallback
 {
     public GameObject playerCam;
     public GameObject fps;
@@ -24,6 +27,8 @@ public class WeaponManager : MonoBehaviour
     public PhotonView photonView;
 
     public GameManager gameManager;
+
+    private const byte VFX_EVENT = 0;
     void Start()
     {
         //posInitCam = playerCam.transform.localPosition;
@@ -78,7 +83,13 @@ public class WeaponManager : MonoBehaviour
     {
         if (PhotonNetwork.InRoom)
         {
-            photonView.RPC("WeaponShootVFX", RpcTarget.All, photonView.ViewID);
+            int viewID = photonView.ViewID;
+
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+            SendOptions sendOptions = new SendOptions { Reliability = true };
+
+            PhotonNetwork.RaiseEvent(VFX_EVENT, viewID, raiseEventOptions, sendOptions);
+            //photonView.RPC("WeaponShootVFX", RpcTarget.All, photonView.ViewID);
         }
         else
         {
@@ -125,7 +136,7 @@ public class WeaponManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
         playerAnimator.SetBool("isShooting", false);
     }
-    IEnumerator FpsMove()
+   /* IEnumerator FpsMove()
     {
         float x = Random.Range(0, 0.05f);
         float y = Random.Range(0, 0.03f);
@@ -135,5 +146,23 @@ public class WeaponManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.2f);
         fps.transform.localPosition = posInitCam;
         //playerCam.transform.localPosition = posInitCam;
-    }
+    }*/
+
+   void IOnEventCallback.OnEvent(EventData photonEvent)
+   {
+       if (photonEvent.Code == VFX_EVENT)
+       {
+           int viewID = (int)photonEvent.CustomData;
+           ShootVFX(viewID);
+       }
+   }
+   private void OnEnable()
+   {
+       PhotonNetwork.AddCallbackTarget(this);
+   }
+
+   private void OnDisable()
+   {
+       PhotonNetwork.RemoveCallbackTarget(this);
+   }
 }

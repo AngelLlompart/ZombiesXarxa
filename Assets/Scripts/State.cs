@@ -85,6 +85,7 @@ public class State
     public void GetClosestPlayer()
     {
         float minDistance = Mathf.Infinity;
+        GameObject player = new GameObject();
         Vector3 currentPosition = npc.transform.position;
 
         foreach (GameObject p in players)
@@ -94,11 +95,13 @@ public class State
                 float distance = Vector3.Distance(p.transform.position, currentPosition);
                 if (distance < minDistance)
                 {
-                    _closePlayer = p;
+                    player = p;
                     minDistance = distance;
                 }
             }
         }
+
+        _closePlayer = player;
     }
 
     public class Attack : State
@@ -126,11 +129,7 @@ public class State
                 {
                     nextState = new Rampage(npc, agent, players);
                     stage = EVENT.EXIT;
-                } 
-            
-            
-
-            
+                }
         }
         
         public override void Exit()

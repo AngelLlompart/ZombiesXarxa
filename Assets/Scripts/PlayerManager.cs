@@ -104,9 +104,9 @@ public class PlayerManager : MonoBehaviour
         
     }
 
-    [PunRPC]
+    /*[PunRPC]
     public void WeaponShootVFX(int viewID)
     {
         activeWeapon.GetComponent<WeaponManager>().ShootVFX(viewID);
-    }
+    }*/
 }
