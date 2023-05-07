@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Pause();
             }
         }
+        
     }
 
     private void DisplayNextRound(int round)
@@ -114,6 +115,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         pauseMenu.SetActive(false);
         _mouseLook.enabled = true;
+        _player.GetComponent<PlayerMovement2>().enabled = true;
         //_weapon.GetComponent<WeaponManager>().enabled = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -161,12 +163,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         
     }
 
-    private void StopTime()
-    { if (!PhotonNetwork.InRoom)
+    public void StopTime()
+    { 
+        if (!PhotonNetwork.InRoom)
         {
             Time.timeScale = 0;
         }
         _mouseLook.enabled = false;
+        _player.GetComponent<PlayerMovement2>().enabled = false;
         //_weapon.GetComponent<WeaponManager>().enabled = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
