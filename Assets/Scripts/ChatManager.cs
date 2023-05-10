@@ -28,29 +28,22 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         _chatClient.Service();
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (chatText.text != "")
-            {
-                SendMessage();
-            }
-            _gameManager.UnPause();
             chatText.DeactivateInputField();
         }
         
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (chatActive == false)
-            {
-                _gameManager.StopTime();
-                chatText.Select();
-                chatText.ActivateInputField();
-            }
-            else
-            {
-                chatText.text = "";
-                chatText.DeactivateInputField();
-            }
+            _gameManager.paused = false;
+            SendMessage();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.T) && chatActive == false)
+        {
+            _gameManager.paused = true;
+            chatText.Select();
+            chatText.ActivateInputField();
         }
     }
 
@@ -116,8 +109,13 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void SendMessage()
     {
-        _chatClient.PublishMessage("RegionChannel", chatText.text);
+        if (chatText.text != "")
+        {
+            _chatClient.PublishMessage("RegionChannel", chatText.text);
+        }
         chatText.text = "";
+        _gameManager.UnPause();
+        chatText.DeactivateInputField();
     }
     
 }

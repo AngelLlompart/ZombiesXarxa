@@ -21,15 +21,23 @@ public class PlayerMovement2 : MonoBehaviour
     public float jumpHeight = 2f;
 
     public PhotonView photonView;
+
+    private GameManager _gameManager;
     // Start is called before the first frame update
     void Start()
     {
+        _gameManager = FindObjectOfType<GameManager>();
         groundMask = LayerMask.GetMask("Ground");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (_gameManager.paused)
+        {
+            _controller.Move(new Vector3(0, 0, 0));
+            return;
+        }
         if (PhotonNetwork.InRoom && !photonView.IsMine)
         {
             return;

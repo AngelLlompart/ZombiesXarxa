@@ -170,11 +170,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             Time.timeScale = 0;
         }
         _mouseLook.enabled = false;
-        _player.GetComponent<PlayerMovement2>().enabled = false;
+        //_player.GetComponent<PlayerMovement2>().enabled = false;
         //_weapon.GetComponent<WeaponManager>().enabled = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
+    
     public void InitLevel()
     {
         enemiesAlive = 0;
@@ -196,14 +197,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     IEnumerator DelayMenu()
     {
         yield return new WaitForSecondsRealtime(1);
-        if (PhotonNetwork.InRoom)
+        /*if (PhotonNetwork.InRoom)
         {
             SceneManager.LoadScene("MultiplayerScene");
         }
         else
         {
             SceneManager.LoadScene("MainMenu");
-        }
+        }*/
+        SceneManager.LoadScene("MainMenu");
     }
 
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
