@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,10 +23,12 @@ public class PlayerManager : MonoBehaviour
 
     public PhotonView photonView;
 
+    public int id;
     public GameObject activeWeapon;
     // Start is called before the first frame update
     void Start()
     {
+        id = photonView.ViewID;
         _gameManager = FindObjectOfType<GameManager>();
         healthText.text = "Health: " + health;
         posInitCam = camera.transform.localRotation;
@@ -61,14 +64,14 @@ public class PlayerManager : MonoBehaviour
 
     public void Hit(float dmg)
     {
-        if (PhotonNetwork.InRoom)
+        /*if (PhotonNetwork.InRoom)
         {
             photonView.RPC("PlayerTakeDamage", RpcTarget.All, dmg, photonView.ViewID);
         }
         else
-        {
+        {*/
             PlayerTakeDamage(dmg, photonView.ViewID);
-        }
+        //}
       
     }
 
@@ -80,7 +83,7 @@ public class PlayerManager : MonoBehaviour
             health -= dmg;
             if (health <= 0)
             {
-                _gameManager.GameOver();
+                PlayerDied();
             }
             else
             {
@@ -92,6 +95,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void PlayerDied()
+    {
+        tag = "PlayerDead";
+        _gameManager.GameOver();
+    }
     public void RestartHP()
     {
         health = 100;

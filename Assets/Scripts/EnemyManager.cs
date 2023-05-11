@@ -31,8 +31,8 @@ public class EnemyManager : MonoBehaviour
     private AudioSource _audioSource;
     [SerializeField] private AudioClip[] audioClips;
     public PhotonView _photonView;
+    private GameObject _closestPlayer;
 
-    
     State currentState;
 
     private GameObject[] _playersInScene;
@@ -41,7 +41,7 @@ public class EnemyManager : MonoBehaviour
     {
         healthBar.maxValue = health;
         healthBar.value = health;
-        _playersInScene = GameObject.FindGameObjectsWithTag("Player");
+        //_playersInScene = GameObject.FindGameObjectsWithTag("Player");
         _navMesh = GetComponent<NavMeshAgent>();
         _audioSource = GetComponent<AudioSource>();
         currentState = new State.Attack(this.gameObject, _navMesh, _playersInScene); // Create our first state.
@@ -56,17 +56,18 @@ public class EnemyManager : MonoBehaviour
             _audioSource.PlayDelayed(1);
         }
 
-        if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient)
+        /*if (PhotonNetwork.InRoom && !PhotonNetwork.IsMasterClient)
         {
             return;
-        }
+        }*/
+        _playersInScene = GameObject.FindGameObjectsWithTag("Player");
         
         GetClosestPlayer();
         currentState = currentState.Process();
-        if (_player != null)
+        if (_closestPlayer != null)
         {
             //_navMesh.destination = _player.transform.position;
-            healthBar.transform.LookAt(_player.transform);
+            healthBar.transform.LookAt(_closestPlayer.transform);
         }
         
         if (_navMesh.velocity.magnitude > 1)
@@ -99,7 +100,7 @@ public class EnemyManager : MonoBehaviour
             }
             if(attackDelayTimer >= delayBetweenAttacks)
             {
-                _player.GetComponent<PlayerManager>().Hit(damageDone);
+                _closestPlayer.GetComponent<PlayerManager>().Hit(damageDone);
                 attackDelayTimer = 0;
             }
         }
@@ -168,5 +169,7 @@ public class EnemyManager : MonoBehaviour
                 }
             }
         }
+
+        _closestPlayer = _player;
     }
 }

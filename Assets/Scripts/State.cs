@@ -122,7 +122,7 @@ public class State
 
         public override void Update()
         {
-           
+            players = GameObject.FindGameObjectsWithTag("Player");
                 GetClosestPlayer();
                 agent.destination = _closePlayer.transform.position;
                 if (npc.GetComponent<EnemyManager>().health <= 50 && _gameManager.round >= 4)
@@ -159,6 +159,7 @@ public class State
 
         public override void Update()
         {  
+            players = GameObject.FindGameObjectsWithTag("Player");
             GetClosestPlayer();
 
             zigZagDelta += Time.deltaTime * 2;

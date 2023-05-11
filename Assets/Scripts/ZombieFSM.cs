@@ -25,6 +25,7 @@ public class ZombieFSM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //_players = GameObject.FindGameObjectsWithTag("Player");
         // Trobam a l'enemic
         currentState = currentState.Process(); // Calls Process method to ensure correct state is set.
     }

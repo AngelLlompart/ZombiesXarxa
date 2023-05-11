@@ -14,7 +14,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] private TextMeshProUGUI chat;
     private GameManager _gameManager;
     
-    private bool chatActive = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,9 +38,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             SendMessage();
         }
         
-        if (Input.GetKeyDown(KeyCode.T) && chatActive == false)
+        if (Input.GetKeyDown(KeyCode.T))
         {
             _gameManager.paused = true;
+            _gameManager.StopTime();
             chatText.Select();
             chatText.ActivateInputField();
         }
@@ -58,7 +58,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     }
 
     public void OnConnected()
-    {
+    { 
+        Debug.Log("OOMMO");
         _chatClient.Subscribe(new string[] { "RegionChannel" });
     }
 
@@ -69,6 +70,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
+        Debug.Log("EEEEEEE");
         string msgs = "";
         for (int i = 0; i < senders.Length; i++)
         {

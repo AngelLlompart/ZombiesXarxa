@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 }
             }
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Escape) && !gameOver)
         {
             if (paused)
@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         StopTime();
         gameOver = true;
-        surviveRoundsText.text = "Rounds Sruvived \n" + round;
+        surviveRoundsText.text = "Rounds Survived \n" + round;
         gameOverMenu.SetActive(true);
         
     }

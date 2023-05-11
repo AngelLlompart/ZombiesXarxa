@@ -8969,6 +8969,7 @@ MonoBehaviour:
   camera: {fileID: 409341072425184989}
   hitPanel: {fileID: 409341071153978793}
   photonView: {fileID: 5011960438601912406}
+  id: 0
   activeWeapon: {fileID: 9101510239590392678}
 --- !u!114 &5011960438601912406
 MonoBehaviour:
@@ -10576,8 +10577,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 356557820919168059}
   m_HandleRect: {fileID: 4954508315038185989}
   m_Direction: 2
-  m_Value: 1.000005
-  m_Size: 0.6731669
+  m_Value: 0.9999978
+  m_Size: 0.67316705
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
